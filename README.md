@@ -19,7 +19,7 @@
 src/kernel/            纯函数内核（采样、图集数学、事件调度、分组）——无 IO、无 Effect
 src/boundary/          Effect 边界（Schema 解码、资源加载、音频播放）
 src/ui/                React + @hoardodile/ui 视图与 canvas 渲染
-scripts/               testdata 生成、workbench 启动、内核纯度 / 版权 / readme 门禁
+scripts/               testdata 生成、workbench 启动、内核纯度 / readme 门禁
 testdata/              合成的最小角色，供 `pnpm dev` 与单测使用
 docs/format.md         导出数据格式（消费端契约）
 ```
@@ -110,7 +110,7 @@ workbench 会把渲染好的封面按资源 id + 路径缓存在 `.hoardodile/ca
 ## 7. 质量门禁
 
 ```bash
-pnpm lint        # biome check + 内核纯度门禁 + 版权门禁 + tsc --noEmit
+pnpm lint        # biome check + 内核纯度门禁 + tsc --noEmit
 pnpm format      # biome check --write
 pnpm test        # Vitest：内核采样/图集/事件/分组 + 插件钩子 + 五语文案一致性 + 真实文档解码
 pnpm build       # 插件产物 dist/
@@ -125,11 +125,6 @@ pnpm readme:check# 门禁 readme/（市场用的扁平 README 与图片引用）
 时间与随机源），Biome 负责格式化与常规规则（`biome.json` 的 `overrides` 对
 内核额外开启 `useConst`/`noVar`/`noParameterAssign`/`noExplicitAny`）。
 边界与 UI 层允许必要的命令式写法，但数据一律只读。
-
-`scripts/check-ip-policy.mjs` 是**版权门禁**：本仓库是公开内容，任何文字（代码注释、
-文档、fixture、i18n 文案）都不得出现游戏名/发行商/引擎/中间件/骨骼动画产品的名字，
-也不得出现逆向细节。它扫描所有随仓库发布的文本文件，白名单只有
-「仓库自身名字出现在 `package.json` 与 `pnpm-lock.yaml` 里」这一条例外。
 
 把真实数据接进测试（可选）：
 

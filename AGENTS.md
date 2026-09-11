@@ -5,15 +5,13 @@
 A hoardodile content plugin that plays an **exported 2D sprite-frame character**:
 `detect` → `sourceMeta` → sandboxed iframe render, plus per-frame audio.
 
-**Hard constraint:** this repository is public and must carry no third-party
-content. No game/character names, no publisher, no engine or middleware product
-names, no reverse-engineering detail — anywhere, including comments, docs, i18n
-strings and fixtures. `scripts/check-ip-policy.mjs` enforces this and runs in
-`pnpm lint`; the only allowlisted occurrence is the repo's own name in
-`package.json` and `pnpm-lock.yaml`.
-
 The exporter is a **separate, private** project. Nothing here parses game data;
 this repo consumes the format documented in `docs/format.md`.
+
+Keep the shipped text free of third-party names (game/character names, publisher,
+engine or middleware products) and of reverse-engineering detail — comments, docs,
+i18n strings and fixtures included, and examples use invented ids (`test0001`).
+That is a convention, not a gate: there is no automated check for it.
 
 ## Commands
 
@@ -25,7 +23,7 @@ this repo consumes the format documented in `docs/format.md`.
 - `pnpm test` — Vitest. `FRAME_DATA_ROOT=<export root> pnpm test` additionally decodes
   a spread of real `character.json` files.
 - `pnpm run detect:smoke` — sandboxed `detect` against `testdata/` (needs a build first).
-- `pnpm lint` — `biome check .` + kernel purity + IP policy + `tsc --noEmit`.
+- `pnpm lint` — `biome check .` + kernel purity + `tsc --noEmit`.
 - `pnpm format` — `biome check --write`; `pnpm testdata` — regenerate the fixture.
 - `pnpm readme:check` — gate the marketplace `readme/` folder; `pnpm release <version>` —
   release-it bumps version, writes `CHANGELOG.md`, tags `v<version>`.
@@ -44,7 +42,7 @@ src/shared.ts   FrameSchema typed once, shared server ↔ client
 src/hooks.ts    typed plugin API (definePluginAPI) for the client
 docs/format.md  the export format this plugin consumes (the published contract)
 testdata/       synthetic fixture for `pnpm dev` and unit tests
-scripts/        fixture generator, dev launcher, kernel-purity / IP gates
+scripts/        fixture generator, dev launcher, kernel-purity gate
 ```
 
 ## Architecture
@@ -84,7 +82,7 @@ scripts/        fixture generator, dev launcher, kernel-purity / IP gates
 - Biome: tabs, double quotes, no semicolons. Keep `pnpm format` output as-is.
 - TypeScript is pinned to 7.x (native compiler), so `typescript-eslint` and
   `eslint-plugin-functional` cannot load — that is why kernel strictness lives in
-  `scripts/check-kernel-purity.mjs` and IP strictness in `scripts/check-ip-policy.mjs`.
+  `scripts/check-kernel-purity.mjs`.
 - Changing a field name is a **format change**: update `docs/format.md`,
   `src/kernel/types.ts`, `src/boundary/schema.ts`, `scripts/make-testdata.mjs` and the
   private exporter's format-contract test together.

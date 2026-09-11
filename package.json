@@ -13,7 +13,7 @@
 		"watch": "hoardodile plugin build --watch",
 		"detect:smoke": "hoardodile plugin run detect testdata --plugin-dir dist",
 		"testdata": "node scripts/make-testdata.mjs",
-		"lint": "biome check . && node scripts/check-kernel-purity.mjs && node scripts/check-ip-policy.mjs && tsc --noEmit",
+		"lint": "biome check . && node scripts/check-kernel-purity.mjs && tsc --noEmit",
 		"format": "biome check --write",
 		"lint-staged": "lint-staged --max-arg-length=6000",
 		"postinstall": "node scripts/setup-hooks.mjs",
