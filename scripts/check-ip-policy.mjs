@@ -97,6 +97,21 @@ const TERMS = [
 		// `--animate-skel*` custom properties, which have nothing to do with it.
 		pattern: /\bspine\b|\bspindle\b/i,
 	},
+	{
+		id: "source-identifiers",
+		reason: "identifiers copied out of the source data",
+		// The exporter's internal stems. Examples and fixtures must be invented.
+		pattern:
+			/\bassetbundles\b|\bninjaimage|\bninja\b|\b1nrt|\b1nrs|\bmasterdata\b/i,
+	},
+	{
+		id: "resource-id",
+		reason:
+			"a resource id from the source data (use an invented id like test0001)",
+		// Exported ids are eight-digit numbers starting with 1, and no legitimate
+		// example needs one. If this ever trips on a real number, rewrite it.
+		pattern: /\b1\d{7}\b/,
+	},
 ]
 
 /**
@@ -163,5 +178,5 @@ if (offenders.length > 0) {
 }
 
 console.log(
-	`ip policy: ok (${scanned} files, no game/publisher/engine/middleware names)`,
+	`ip policy: ok (${scanned} files, no game/publisher/engine/middleware names or source identifiers)`,
 )
