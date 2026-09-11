@@ -1,0 +1,42 @@
+{
+	"id": "ff80cf94-d7c5-4a85-894c-26032864ae9e",
+	"name": "Character Frame Animation",
+	"description": "Frame-animation viewer for exported 2D character sprite folders",
+	"version": "0.0.1",
+	"minAppVersion": "0.2.0",
+	"permissions": {
+		"sourceMeta": true,
+		"searchMeta": false,
+		"danmaku": false,
+		"message": false
+	},
+	"ui": {
+		"card": {
+			"image": {
+				"bl": ["{{t('card.character')}}"],
+				"tl": ["{{t('card.frames')}}"]
+			},
+			"default": {
+				"tl": ["{{t('card.frames')}}"]
+			}
+		}
+	},
+	"i18n": {
+		"name": {
+			"en": "Character Frame Animation",
+			"zh": "角色帧动画"
+		},
+		"description": {
+			"en": "Frame-animation viewer for exported 2D character sprite folders",
+			"zh": "播放自包含角色目录导出的 2D 精灵帧动画（含按帧触发的音频）"
+		},
+		"card.character": {
+			"en": "Sprite frame animation",
+			"zh": "精灵帧动画"
+		},
+		"card.frames": {
+			"en": "Character model",
+			"zh": "角色模型"
+		}
+	}
+}

@@ -1,0 +1,18 @@
+# Dependencies
+/node_modules/
+
+# Build output (the release workflow rebuilds it)
+/dist/
+/release/
+
+# Exported character data (multi-GB, produced outside this repository)
+/unpacked/
+
+# Workbench-derived cache (rendered covers, keyed by resource id + path)
+/.hoardodile/
+
+# Editor / OS
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini

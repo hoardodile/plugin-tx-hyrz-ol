@@ -1,0 +1,156 @@
+{
+	"schemaVersion": 1,
+	"id": "test0001",
+	"name": "Demo Character",
+	"sourceGroup": "characters",
+	"sourceBundle": "testdata/synthetic",
+	"sourceFormat": {
+		"container": "asset-bundle",
+		"version": 8
+	},
+	"atlases": [
+		{
+			"file": "atlas/test-atlas.png",
+			"width": 64,
+			"height": 64
+		}
+	],
+	"sprites": [
+		{
+			"name": "frame_idle_0",
+			"atlas": "test-atlas.png",
+			"rect": [0, 32, 32, 32],
+			"pivot": [0.5, 0],
+			"pixelsToUnit": 100
+		},
+		{
+			"name": "frame_idle_1",
+			"atlas": "test-atlas.png",
+			"rect": [32, 32, 32, 32],
+			"pivot": [0.5, 0],
+			"pixelsToUnit": 100
+		},
+		{
+			"name": "frame_hit_0",
+			"atlas": "test-atlas.png",
+			"rect": [0, 0, 32, 32],
+			"pivot": [0.5, 0],
+			"pixelsToUnit": 100
+		},
+		{
+			"name": "frame_hit_1",
+			"atlas": "test-atlas.png",
+			"rect": [32, 0, 32, 32],
+			"pivot": [0.5, 0],
+			"pixelsToUnit": 100
+		}
+	],
+	"clips": [
+		{
+			"name": "idle_loop",
+			"group": "idle",
+			"sampleRate": 30,
+			"frameCount": 4,
+			"durationMs": 133.33,
+			"tracks": [
+				{
+					"layer": "layer0",
+					"kind": "sprite",
+					"keys": [
+						[0, "frame_idle_0"],
+						[33.33, "frame_idle_1"],
+						[66.67, "frame_idle_0"],
+						[100, "frame_idle_1"]
+					]
+				}
+			],
+			"constants": {
+				"layer0": {
+					"position": [0, 0, 0],
+					"scale": [1, 1, 1],
+					"euler": [0, 0, 0]
+				}
+			}
+		},
+		{
+			"name": "attack_slash",
+			"group": "attack",
+			"sampleRate": 30,
+			"frameCount": 3,
+			"durationMs": 100,
+			"tracks": [
+				{
+					"layer": "layer0",
+					"kind": "sprite",
+					"keys": [[0, "frame_hit_0"], [33.33, "frame_hit_1"], [66.67, null]]
+				},
+				{
+					"layer": "layer0",
+					"kind": "position",
+					"curves": [
+						[[0, 0], [33.33, 6], [66.67, 0]],
+						[[0, 0], [33.33, 2], [66.67, 0]],
+						[[0, 0]]
+					]
+				}
+			],
+			"constants": {
+				"layer0": {
+					"scale": [1, 1, 1],
+					"euler": [0, 0, 0]
+				}
+			}
+		},
+		{
+			"name": "hide",
+			"group": "state",
+			"sampleRate": 30,
+			"frameCount": 1,
+			"durationMs": 33.33,
+			"tracks": [
+				{
+					"layer": "layer0",
+					"kind": "sprite",
+					"keys": [[0, null]]
+				}
+			],
+			"constants": {}
+		}
+	],
+	"sounds": [
+		{
+			"name": "attack_slash",
+			"frames": [
+				{
+					"frame": 1,
+					"events": ["event:/sfx/demo/hit_01"]
+				}
+			]
+		}
+	],
+	"layers": [
+		{
+			"name": "layer0",
+			"sortingOrder": 0,
+			"sortingLayer": 0,
+			"z": 0
+		}
+	],
+	"points": [
+		{
+			"name": "layer0",
+			"position": [0, 0, 0]
+		}
+	],
+	"audio": {
+		"events": 1,
+		"resolved": 0,
+		"unresolved": 1
+	},
+	"stats": {
+		"sprites": 4,
+		"clips": 3,
+		"soundEvents": 1,
+		"maxClipMs": 133.33
+	}
+}

@@ -1,0 +1,17 @@
+{
+	"version": 1,
+	"skills": {
+		"hd-plugin": {
+			"source": "hoardodile/hoardodile",
+			"sourceType": "github",
+			"skillPath": "skills/hd-plugin/SKILL.md",
+			"computedHash": "3a736b004f199f6a87cccf2f71bf5101654223c76a89aa1b7e012fdd96fb9e33"
+		},
+		"hd-ui": {
+			"source": "hoardodile/hoardodile",
+			"sourceType": "github",
+			"skillPath": "skills/hd-ui/SKILL.md",
+			"computedHash": "cd3b0f9122ad4891a4a1d67f099cfc33addae97c70a7bdce778dceaa9c43b2ef"
+		}
+	}
+}
