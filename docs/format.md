@@ -39,7 +39,7 @@
 ```jsonc
 {
   "schemaVersion": 1,
-  "id": "11000111",
+  "id": "test0001",
   "name": "…",                  // 显示名，未知时 null
   "sourceGroup": "…",           // 导出端的分组标签（原样显示，不解释）
   "sourceBundle": "…",          // 导出端的数据来源标识（原样显示，不解释）
@@ -57,12 +57,14 @@
   "layers": [
     { "name": "layer0", "sortingOrder": 0, "sortingLayer": 0, "z": 0 }
   ],
-  "audio": { "events": 55, "resolved": 55, "unresolved": 0 },
+  "audio": { "events": 12, "resolved": 12, "unresolved": 0 },
   "stats": {
-    "sprites": 206, "clips": 89, "soundEvents": 9, "maxClipMs": 3100
+    "sprites": 150, "clips": 75, "soundEvents": 12, "maxClipMs": 3100
   }
 }
 ```
+
+> 本文档里的 id、名称、计数**全是编的**：示例不得出现任何真实导出里的标识符。
 
 - `atlases[].file` 是**图集页文件相对本目录的路径**（`atlas/page0.png`）。
 - `points[].position` 是图层锚点在世界空间的位置；`layers[].z` 是它的 z。
@@ -75,7 +77,7 @@
 
 ```jsonc
 {
-  "name": "1nrtbody0_0000",
+  "name": "body_idle_0000",
   "atlas": "atlas/page0.png",       // 与 atlases[].file 对应
   "rect": [x, y, width, height],    // 像素，原点在图集页**左下角**
   "pivot": [px, py],                // 归一化，相对 rect 左下角；允许落在 rect 之外
@@ -94,7 +96,7 @@
 
 ```jsonc
 {
-  "name": "C_idle",
+  "name": "idle_loop",
   "group": "idle",              // idle|move|attack|skill|damage|state|other
   "sampleRate": 30,             // 帧率
   "frameCount": 50,
@@ -131,10 +133,10 @@
 
 ```jsonc
 {
-  "name": "C_attack",
+  "name": "attack_slash",
   "frames": [
-    { "frame": 1, "events": ["event:/…"] },
-    { "frame": 3, "events": ["event:/…", "event:/…"], "volumes": [0.5, 1] }
+    { "frame": 1, "events": ["event:/sfx/demo/hit_01"] },
+    { "frame": 3, "events": ["event:/sfx/demo/hit_02", "event:/sfx/demo/voice_01"], "volumes": [0.5, 1] }
   ]
 }
 ```
@@ -147,8 +149,8 @@
 
 ```jsonc
 [
-  { "event": "event:/…", "file": "audio/<name>.ogg", "match": "metadata" },
-  { "event": "event:/…", "file": null, "match": "unresolved" }
+  { "event": "event:/sfx/demo/hit_01", "file": "audio/hit_01.ogg", "match": "metadata" },
+  { "event": "event:/sfx/demo/hit_99", "file": null, "match": "unresolved" }
 ]
 ```
 
@@ -163,21 +165,21 @@
 {
   "schemaVersion": 1,
   "counts": {
-    "characters": 769,
-    "portraits": 602,             // 同一棵树里附带、本插件不解析的其它 rig 数量
-    "charactersWithAudio": 753,
-    "audioEvents": 4012,
-    "bytes": 3546557163
+    "characters": 3,
+    "portraits": 1,               // 同一棵树里附带、本插件不解析的其它 rig 数量
+    "charactersWithAudio": 2,
+    "audioEvents": 12,
+    "bytes": 1048576
   },
   "characters": [
     {
-      "id": "11000111",
+      "id": "test0001",
       "name": null,
-      "directory": "characters/11000111",   // 相对**本 catalog 所在目录**
+      "directory": "characters/test0001",   // 相对**本 catalog 所在目录**
       "sourceGroup": "…",
-      "sprites": 206, "clips": 89, "soundEvents": 9, "maxClipMs": 3100,
-      "audio": { "events": 55, "resolved": 55, "unresolved": 0 },
-      "bytes": 3612345,
+      "sprites": 150, "clips": 75, "soundEvents": 12, "maxClipMs": 3100,
+      "audio": { "events": 12, "resolved": 12, "unresolved": 0 },
+      "bytes": 524288,
       "hasCover": true
     }
   ]

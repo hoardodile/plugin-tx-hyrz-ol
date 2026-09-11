@@ -40,14 +40,14 @@ pnpm dev          # 用 testdata/ 里的合成角色起 workbench
 ```bash
 pnpm dev                                   # 合成 fixture（testdata/）
 pnpm dev:data --data <dir>                 # <dir> 里的第一个角色
-pnpm dev:data --data <dir> 11000111        # 指定角色
+pnpm dev:data --data <dir> <id>            # 指定角色
 pnpm dev:data --data <dir> --all           # characters/ 下每个角色一个 resource
 pnpm dev:data --data <dir> --collection    # characters/ 作为合集 resource（含角色选择器）
 ```
 
-`--data` 可以指向**导出根目录**（其中含 `characters/`）或直接指向
-`characters/` 目录本身；也可以用环境变量 `FRAME_DATA_ROOT`。打开
-http://127.0.0.1:5199 。
+`--data` 可以指向**导出根目录**（其中含 `characters/`）、`characters/` 目录本身，
+或**单个角色目录**（根含 `character.json`）；也可以用环境变量 `FRAME_DATA_ROOT`。
+导出数据不在本仓库内，路径需要手动给。打开 http://127.0.0.1:5199 。
 
 视图包含：左侧动作列表（按 **待机/移动/普攻/技能/受击/状态** 分组，显示帧数）、
 中间 canvas 帧动画（播放/暂停、逐帧、重播、速度、缩放、循环、参考线、时间轴拖动、

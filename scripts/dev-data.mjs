@@ -7,12 +7,12 @@
  * an export root (or at a `characters/` directory). Usage:
  *
  *   node scripts/dev-data.mjs --data <dir>                 # first character
- *   node scripts/dev-data.mjs --data <dir> 11000111        # one character
+ *   node scripts/dev-data.mjs --data <dir> <id>            # one character
  *   node scripts/dev-data.mjs --data <dir> --all           # every character
  *   node scripts/dev-data.mjs --data <dir> --collection    # one collection
  *
- * `<dir>` may be an export root (holding `characters/`) or a `characters/`
- * directory itself; both are accepted.
+ * `<dir>` may be an export root (holding `characters/`), a `characters/`
+ * directory, or one self-contained character folder; all three are accepted.
  */
 
 import { spawn } from "node:child_process"

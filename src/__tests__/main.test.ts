@@ -8,12 +8,12 @@ import type { FrameSchema } from "../shared"
 
 const characterDocument = {
 	schemaVersion: 1,
-	id: "11000111",
+	id: "test0001",
 	name: null,
-	sourceGroup: "battle",
-	sourceBundle: "assetbundles/battle/ninja_11000111",
+	sourceGroup: "characters",
+	sourceBundle: "bundles/demo/test0001",
 	sourceFormat: { container: "asset-bundle", version: 8 },
-	atlases: [{ file: "atlas/Image_1.png", width: 1024, height: 1024 }],
+	atlases: [{ file: "atlas/page0.png", width: 1024, height: 1024 }],
 	sprites: [],
 	clips: [],
 	sounds: [],
@@ -26,7 +26,7 @@ const characterDocument = {
 describe("character frame plugin", () => {
 	it("detects a self-contained character folder", async () => {
 		const { api } = createResourceAPIFixture<FrameSchema>({
-			files: ["character.json", "atlas/Image_1.png", "cover.png"],
+			files: ["character.json", "atlas/page0.png", "cover.png"],
 		})
 		const result = await plugin.detect(api)
 		expect(result).toEqual({
@@ -39,7 +39,7 @@ describe("character frame plugin", () => {
 
 	it("detects the export collection root", async () => {
 		const { api } = createResourceAPIFixture<FrameSchema>({
-			files: ["catalog.json", "characters/11000111/character.json"],
+			files: ["catalog.json", "characters/test0001/character.json"],
 		})
 		const result = await plugin.detect(api)
 		expect(result).toMatchObject({ ok: true, resource: "collection" })
@@ -55,12 +55,12 @@ describe("character frame plugin", () => {
 
 	it("summarizes a character in sourceMeta", async () => {
 		const { api } = createResourceAPIFixture<FrameSchema>({
-			files: ["character.json", "atlas/Image_1.png"],
+			files: ["character.json", "atlas/page0.png"],
 			contents: { "character.json": JSON.stringify(characterDocument) },
 		})
 		const meta = await plugin.sourceMeta?.(api)
 		expect(meta?.character).toEqual({
-			id: "11000111",
+			id: "test0001",
 			name: null,
 			sprites: 150,
 			clips: 75,
@@ -74,12 +74,7 @@ describe("character frame plugin", () => {
 
 	it("classifies files for the viewer", async () => {
 		const { api } = createResourceAPIFixture<FrameSchema>({
-			files: [
-				"character.json",
-				"atlas/Image_1.png",
-				"audio/a.ogg",
-				"notes.txt",
-			],
+			files: ["character.json", "atlas/page0.png", "audio/a.ogg", "notes.txt"],
 		})
 		const files = await plugin.listFiles?.(api)
 		expect(files?.map((file) => file.kind)).toEqual([
