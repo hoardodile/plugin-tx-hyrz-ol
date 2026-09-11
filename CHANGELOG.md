@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.1.1](https://github.com/hoardodile/plugin-tx-hyrz-ol/compare/v0.1.0...v0.1.1) (2026-09-11)
+
+### Bug Fixes
+
+* shorten the plugin name to 2D Frame ([3f94a2c](https://github.com/hoardodile/plugin-tx-hyrz-ol/commit/3f94a2c3a5ba399f2af81d042999d170bd6d5197))
+
 ## 0.1.0 (2026-09-11)
 
 ### Features
