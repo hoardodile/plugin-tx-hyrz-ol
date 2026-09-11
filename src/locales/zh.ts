@@ -50,6 +50,9 @@ export default {
 	"audio.noMapHint":
 		"该角色的事件未匹配到样本。可在 overrides.json 中手工配对后重新导出。",
 	"error.load": "无法加载该角色",
+	"error.noActions": "这个导出里没有动作",
+	"error.noActionsHint":
+		"该角色的导出有 {{sprites}} 张精灵、{{atlases}} 页图集，但 clips 为空，没有可播放的帧动画。",
 	"error.notCharacter": "不是角色导出目录",
 	"error.notCharacterHint":
 		"需要含 character.json 的目录，或含 catalog.json 的导出根目录。",

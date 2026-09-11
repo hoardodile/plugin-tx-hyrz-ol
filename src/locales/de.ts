@@ -51,6 +51,9 @@ export default {
 	"audio.noMapHint":
 		"Die Events wurden keinem Sample zugeordnet. In overrides.json paaren und neu exportieren.",
 	"error.load": "Charakter konnte nicht geladen werden",
+	"error.noActions": "Keine Animationen in diesem Export",
+	"error.noActionsHint":
+		"Der Export enthält {{sprites}} Sprites und {{atlases}} Atlas-Seite(n), aber keine Clips — es gibt keine Frame-Animation abzuspielen.",
 	"error.notCharacter": "Kein Charakter-Export",
 	"error.notCharacterHint":
 		"Erwartet einen Ordner mit character.json oder eine Wurzel mit catalog.json.",

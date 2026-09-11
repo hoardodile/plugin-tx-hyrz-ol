@@ -201,6 +201,8 @@ export function CharacterView() {
 					<Skeleton className="h-control w-full" />
 					<Skeleton className="min-h-0 flex-1" />
 				</div>
+			) : state.document.clips.length === 0 ? (
+				<NoActions document={state.document} />
 			) : mode === "preview" ? (
 				<PreviewGrid
 					document={state.document}
@@ -221,6 +223,34 @@ export function CharacterView() {
 					picker={picker}
 				/>
 			)}
+		</div>
+	)
+}
+
+/**
+ * What a character export without animations gets.
+ *
+ * Some rigs ship their sprites, atlas pages and sound events but no clips at
+ * all — the portraits in an export tree are exactly that, and a half-finished
+ * export looks the same. Saying so *is* the whole view: the alternative was an
+ * empty preview grid and a "could not load this character" panel in inspect,
+ * which reads as a broken plugin rather than an export with nothing to play.
+ */
+function NoActions({ document }: { readonly document: CharacterDocument }) {
+	const { t } = useTranslation()
+	return (
+		<div className="flex size-full items-center justify-center p-6">
+			<Empty>
+				<EmptyHeader>
+					<EmptyTitle>{t("error.noActions")}</EmptyTitle>
+					<EmptyDescription>
+						{t("error.noActionsHint", {
+							sprites: document.sprites.length,
+							atlases: document.atlases.length,
+						})}
+					</EmptyDescription>
+				</EmptyHeader>
+			</Empty>
 		</div>
 	)
 }

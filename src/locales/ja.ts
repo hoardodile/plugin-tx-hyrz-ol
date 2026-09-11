@@ -50,6 +50,9 @@ export default {
 	"audio.noMapHint":
 		"イベントをサンプルに解決できませんでした。overrides.json で対応付けて再エクスポートしてください。",
 	"error.load": "キャラクターを読み込めません",
+	"error.noActions": "この書き出しにアクションがありません",
+	"error.noActionsHint":
+		"スプライト {{sprites}} 枚・アトラス {{atlases}} ページはありますが、clips が空のため再生できるフレームアニメーションがありません。",
 	"error.notCharacter": "キャラクター書き出しではありません",
 	"error.notCharacterHint":
 		"character.json を含むフォルダ、または catalog.json を含む書き出しルートが必要です。",

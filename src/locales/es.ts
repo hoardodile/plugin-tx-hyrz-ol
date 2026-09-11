@@ -51,6 +51,9 @@ export default {
 	"audio.noMapHint":
 		"Los eventos no se resolvieron a muestras. Empareja en overrides.json y vuelve a exportar.",
 	"error.load": "No se pudo cargar el personaje",
+	"error.noActions": "No hay animaciones en esta exportación",
+	"error.noActionsHint":
+		"La exportación tiene {{sprites}} sprites y {{atlases}} página(s) de atlas, pero ningún clip: no hay animación por fotogramas que reproducir.",
 	"error.notCharacter": "No es una exportación de personaje",
 	"error.notCharacterHint":
 		"Se espera una carpeta con character.json o una raíz con catalog.json.",

@@ -50,6 +50,9 @@ export default {
 	"audio.noMapHint":
 		"This character's events were not resolved to samples. Pair them in overrides.json and re-export.",
 	"error.load": "Could not load this character",
+	"error.noActions": "No animations in this export",
+	"error.noActionsHint":
+		"This character's export has {{sprites}} sprites and {{atlases}} atlas page(s), but no clips — there is no frame animation to play.",
 	"error.notCharacter": "Not a character export",
 	"error.notCharacterHint":
 		"Expected a folder with character.json, or an export root with catalog.json.",
