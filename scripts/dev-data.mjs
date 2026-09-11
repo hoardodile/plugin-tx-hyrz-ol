@@ -17,7 +17,7 @@
 
 import { spawn } from "node:child_process"
 import { existsSync, readdirSync, statSync } from "node:fs"
-import { dirname, join, resolve } from "node:path"
+import { basename, dirname, join, resolve } from "node:path"
 import { fileURLToPath } from "node:url"
 
 const here = dirname(fileURLToPath(import.meta.url))
@@ -54,12 +54,27 @@ if (!existsSync(dataDir)) {
 	process.exit(1)
 }
 
-const charactersDir = existsSync(join(dataDir, "characters"))
-	? join(dataDir, "characters")
-	: dataDir
+/**
+ * Three shapes are accepted, because all three are things a user actually has:
+ * an export root (holding `characters/`), a `characters/` directory, or one
+ * self-contained character folder (`character.json` at its root).
+ */
+const isCharacterFolder = existsSync(join(dataDir, "character.json"))
+const charactersDir = isCharacterFolder
+	? dataDir
+	: existsSync(join(dataDir, "characters"))
+		? join(dataDir, "characters")
+		: dataDir
 const collectionDir = existsSync(join(charactersDir, "catalog.json"))
 	? charactersDir
 	: dataDir
+
+if (isCharacterFolder && (wantsAll || wantsCollection)) {
+	console.error(
+		`${dataDir} is a single character folder — --all/--collection need a directory of characters`,
+	)
+	process.exit(1)
+}
 
 if (!existsSync(join(charactersDir, "catalog.json")) && wantsCollection) {
 	console.error(
@@ -68,11 +83,13 @@ if (!existsSync(join(charactersDir, "catalog.json")) && wantsCollection) {
 	process.exit(1)
 }
 
-const characterFolders = readdirSync(charactersDir).filter(
-	(entry) =>
-		existsSync(join(charactersDir, entry, "character.json")) &&
-		statSync(join(charactersDir, entry)).isDirectory(),
-)
+const characterFolders = isCharacterFolder
+	? [dataDir]
+	: readdirSync(charactersDir).filter(
+			(entry) =>
+				existsSync(join(charactersDir, entry, "character.json")) &&
+				statSync(join(charactersDir, entry)).isDirectory(),
+		)
 
 if (characterFolders.length === 0) {
 	console.error(`no character folders in ${charactersDir}`)
@@ -100,8 +117,13 @@ if (wantsCollection) {
 	console.log(
 		`[dev] ${characterFolders.length} character resources in ${charactersDir}`,
 	)
+} else if (isCharacterFolder) {
+	// `--data` serves one folder as one resource; `--resource-dir` would treat
+	// the character's own `atlas/` subfolder as the resource instead.
+	devArgs.push("--data", dataDir)
+	console.log(`[dev] character resource: ${basename(dataDir)}`)
 } else {
-	const chosen = ids.length > 0 ? ids : [characterFolders[0]]
+	const chosen = ids.length > 0 ? ids : [basename(characterFolders[0])]
 	for (const id of chosen) {
 		const folder = join(charactersDir, id)
 		if (!existsSync(folder)) {
@@ -115,8 +137,6 @@ if (wantsCollection) {
 		)
 		process.exit(1)
 	}
-	// `--data` serves one folder as one resource; `--resource-dir` would treat
-	// the character's own `atlas/` subfolder as the resource instead.
 	devArgs.push("--data", join(charactersDir, chosen[0]))
 	console.log(`[dev] character resource: ${chosen[0]}`)
 }
