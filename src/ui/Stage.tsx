@@ -4,11 +4,11 @@ import {
 	atlasImageFor,
 	atlasSource,
 	canvasRotation,
+	DEFAULT_PIXELS_PER_UNIT,
 	integerSourceRect,
 	layersAt,
 	pixelExactScale,
 	quadFor,
-	UNITY_PIXELS_PER_UNIT,
 } from "../kernel"
 import type { CharacterDocument, Clip } from "../kernel/types"
 
@@ -101,7 +101,7 @@ const paint = (canvas: HTMLCanvasElement, props: StageProps): void => {
 	// browser zoom, a fractional zoom slider) is what makes the browser resample
 	// every frame, so the scale is snapped instead.
 	const pixelsPerUnit =
-		(UNITY_PIXELS_PER_UNIT * pixelExactScale(props.zoom, ratio)) / ratio
+		(DEFAULT_PIXELS_PER_UNIT * pixelExactScale(props.zoom, ratio)) / ratio
 	const snap = (value: number): number => Math.round(value * ratio) / ratio
 
 	for (const layer of layersAt(props.document, props.clip, props.timeMs)) {

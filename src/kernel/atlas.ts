@@ -14,7 +14,8 @@ import type {
 	Vec2,
 } from "./types"
 
-export const UNITY_PIXELS_PER_UNIT = 100
+/** Fallback art pixels per world unit, for a sprite that records none. */
+export const DEFAULT_PIXELS_PER_UNIT = 100
 
 /**
  * The scale that keeps art pixels on the device grid: at least one device pixel
@@ -82,7 +83,7 @@ export const quadFor = (
 	pixelsPerUnit: number,
 ): PivotQuad => {
 	const [, , rectWidth, rectHeight] = sprite.rect
-	const ratio = pixelsPerUnit / (sprite.pixelsToUnit || UNITY_PIXELS_PER_UNIT)
+	const ratio = pixelsPerUnit / (sprite.pixelsToUnit || DEFAULT_PIXELS_PER_UNIT)
 	const width = rectWidth * ratio * scale[0]
 	const height = rectHeight * ratio * scale[1]
 	return {
