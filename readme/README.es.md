@@ -1,4 +1,4 @@
-# Character Frame Animation — visor de animación por fotogramas
+# 2D Frame — visor de animación por fotogramas
 
 Reproduce una **carpeta de personaje 2D ya exportada** en hoardodile: animación de
 sprites fotograma a fotograma, cambio de acciones y el audio del personaje que dispara

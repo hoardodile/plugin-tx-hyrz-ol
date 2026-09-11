@@ -1,4 +1,4 @@
-# Character Frame Animation — Sprite-Frame-Animations-Viewer
+# 2D Frame — Sprite-Frame-Animations-Viewer
 
 Spielt einen **exportierten 2D-Charakterordner** in hoardodile ab: bildgenaue
 Sprite-Animation, Aktionswechsel und das pro Frame ausgelöste Charakter-Audio.

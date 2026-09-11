@@ -1,4 +1,4 @@
-# Character Frame Animation（hoardodile 插件）
+# 2D Frame（hoardodile 插件）
 
 一个 **2D 精灵帧动画**演示插件：把**已导出的自包含角色目录**（或含
 `catalog.json` 的合集目录）在 hoardodile 里播放出来——默认一屏同时预览全部动作，

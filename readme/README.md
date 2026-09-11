@@ -1,4 +1,4 @@
-# Character Frame Animation — sprite frame-animation viewer
+# 2D Frame — sprite frame-animation viewer
 
 Plays an **exported 2D character folder** in hoardodile: frame-accurate sprite
 animation, action switching, and the per-frame character audio the export carries.

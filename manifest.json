@@ -1,6 +1,6 @@
 {
 	"id": "ff80cf94-d7c5-4a85-894c-26032864ae9e",
-	"name": "Character Frame Animation",
+	"name": "2D Frame",
 	"description": "Frame-animation viewer for exported 2D character sprite folders",
 	"version": "0.1.0",
 	"minAppVersion": "0.2.0",
@@ -23,8 +23,8 @@
 	},
 	"i18n": {
 		"name": {
-			"en": "Character Frame Animation",
-			"zh": "角色帧动画"
+			"en": "2D Frame",
+			"zh": "2D 帧动画"
 		},
 		"description": {
 			"en": "Frame-animation viewer for exported 2D character sprite folders",
