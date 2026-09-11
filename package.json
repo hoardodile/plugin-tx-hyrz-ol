@@ -62,7 +62,7 @@
 		"react-dom": "^19.2.8"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "2.5.10",
+		"@biomejs/biome": "2.5.12",
 		"@effect/language-service": "^0.87.2",
 		"@effect/vitest": "4.0.0-rc.113",
 		"@hoardodile/cli": "^0.2.0",
