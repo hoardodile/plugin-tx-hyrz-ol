@@ -14,9 +14,33 @@ dieses Repositorys.
 - Erkennt zwei Ressourcenformen: einen **in sich geschlossenen Charakterordner**
   (`character.json` im Wurzelverzeichnis — einzeln behalt- oder löschbar) und einen
   **Sammelordner** (`catalog.json`, mit Charakterauswahl).
-- Viewer: Aktionsliste nach Idle/Bewegung/Angriff/Skill/Treffer/Zustand gruppiert,
-  Canvas-Frame-Player (Play/Pause, Einzelbild, Neustart, Tempo, Zoom, Schleife,
-  Hilfslinien, Zeitleiste), aktuelles Bild und Anzahl gezeichneter Ebenen.
+- **Vorschau (Standard)**: Alle Aktionen des Charakters laufen gleichzeitig, eine
+  Kachel pro Aktion, ohne jede Einstellung. Jede Kachel bekommt die Größe ihres
+  eigenen Gesamtbild-Rahmens und wird **immer in Originalgröße gezeigt (1:1, ein
+  Art-Pixel = ein Gerätepixel)** — ohne Vergrößerung oder Verkleinerung. Die Kacheln
+  umbrechen per Flex, sodass unterschiedlich große Aktionen ihren eigenen Platz
+  bekommen; reicht der Platz nicht, scrollt das Panel. Die Vorschau ist stumm — sie
+  lädt die Audio-Zuordnung nicht und hat gar keinen Wiedergabeweg.
+- **Prüfen**: eine dichte Aktionstabelle (Suche, Kategoriefilter, je Zeile Bilder /
+  Millisekunden / Sound-Events), eine Bühne in **nativer 1:1-Größe**, die eine ganze
+  Animation in die Fläche einpasst statt sie zu beschneiden, ein
+  **Bildstreifen** aus echten Einzelbildern zum Scrubben; oben im rechten Panel die
+  **Schalter Loop, Nächste Aktion und Sound, je eine Zeile**, danach das aktuelle Bild
+  (Ebene, Sprite, Position, Skalierung, Drehung, die dort ausgelösten Sounds und die
+  Sprite-/Atlas-Angaben); die Event-Zuordnung liegt hinter einem Dialog. **Nächste
+  Aktion** spielt eine Aktion und geht danach direkt zur nächsten der Liste über (am
+  Ende wieder von vorn); dabei wird Loop ausgeschaltet und sein Schalter deaktiviert,
+  weil eine Schleife das Ende einer Aktion nie erreicht. Beide
+  Seitenpanels folgen der Fensterbreite (links ab 1150 px, rechts ab 1440 px).
+- **Einstellungen bleiben erhalten**: die offene Ansicht (Vorschau / Prüfen) und die
+  drei Schalter beim Prüfen sind **Plugin-Einstellungen** im Einstellungsspeicher des
+  Hosts — eine frische Installation öffnet die Vorschau, danach startet jeder Besuch
+  dort, wo der Nutzer aufgehört hat (über Neuladen, Charaktere und Sammlungen hinweg).
+- **Untere Steuerleiste (in beiden Ansichten gleich)**: Play/Pause, Neustart, eine
+  Live-Anzeige (Aktionsanzahl in der Vorschau, `Bild N / M · ms` beim Prüfen) und ganz
+  rechts der Ansichtswechsel; bei einer Sammlung zusätzlich eine durchsuchbare
+  Charakterauswahl. Zoom, Tempo und Einzelbildschritt gibt es nicht — es wird in
+  Exportgröße und Export-Bildrate abgespielt.
 - Charakter-Audio: die Sound-Events, die der Export pro Frame auslöst, mit
   wiederhergestelltem Pegel (Werte ungleich 1.0 zeigen ein `x0.80`-Badge), abspielbar
   sobald sie auf ein Sample zeigen, inklusive vollständigem Auflösungsstatus

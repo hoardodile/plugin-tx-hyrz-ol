@@ -1,0 +1,209 @@
+/**
+ * Canvas painting shared by the preview grid, the timeline strip and the
+ * inspector stage.
+ *
+ * Every painter follows the same rules the repo holds itself to: the context is
+ * scaled once by the device ratio, quads snap to whole device pixels, and
+ * smoothing only turns on where the frame is genuinely downsampled.
+ */
+
+import type { RefObject } from "react"
+import { useEffect, useRef, useState } from "react"
+
+import {
+	atlasImageFor,
+	atlasSource,
+	canvasRotation,
+	fitClipView,
+	integerSourceRect,
+	layersAt,
+	quadFor,
+} from "../kernel"
+import type { Box } from "../kernel/preview"
+import type { CharacterDocument, Clip, Vec2 } from "../kernel/types"
+
+export type BoxState = { readonly width: number; readonly height: number }
+
+/**
+ * Track a canvas's CSS content box.
+ *
+ * The canvas draws with the size the layout gives it, so a change of that size
+ * has to schedule a repaint; the observer watches the CSS box, never the
+ * backing store the painter resizes. The returned ref is stable, so React never
+ * tears the observer down between renders.
+ */
+export const useCanvasBox = (): {
+	readonly ref: RefObject<HTMLCanvasElement | null>
+	readonly box: BoxState
+} => {
+	const [box, setBox] = useState<BoxState>({ width: 0, height: 0 })
+	const ref = useRef<HTMLCanvasElement | null>(null)
+	useEffect(() => {
+		const element = ref.current
+		if (element === null) return undefined
+		const measure = () =>
+			setBox((current) =>
+				current.width === element.clientWidth &&
+				current.height === element.clientHeight
+					? current
+					: { width: element.clientWidth, height: element.clientHeight },
+			)
+		measure()
+		const observer = new ResizeObserver(measure)
+		observer.observe(element)
+		return () => observer.disconnect()
+	}, [])
+	return { ref, box }
+}
+
+/** Device ratio to draw at: whole device pixels per art pixel, or a fraction. */
+export const useDeviceRatio = (): number => {
+	const [ratio, setRatio] = useState(() => window.devicePixelRatio || 1)
+	useEffect(() => {
+		const update = () => setRatio(window.devicePixelRatio || 1)
+		window.addEventListener("resize", update)
+		return () => window.removeEventListener("resize", update)
+	}, [])
+	return ratio
+}
+
+export const prepareCanvas = (
+	canvas: HTMLCanvasElement,
+	ratio: number,
+): CanvasRenderingContext2D | null => {
+	const context = canvas.getContext("2d")
+	if (context === null) return null
+	const width = canvas.clientWidth
+	const height = canvas.clientHeight
+	const targetWidth = Math.max(1, Math.round(width * ratio))
+	const targetHeight = Math.max(1, Math.round(height * ratio))
+	if (canvas.width !== targetWidth || canvas.height !== targetHeight) {
+		canvas.width = targetWidth
+		canvas.height = targetHeight
+	}
+	context.setTransform(ratio, 0, 0, ratio, 0, 0)
+	context.clearRect(0, 0, width, height)
+	return context
+}
+
+export type ClipFrameProps = {
+	readonly document: CharacterDocument
+	readonly clip: Clip
+	readonly timeMs: number
+	readonly atlasImages: ReadonlyMap<string, HTMLImageElement>
+	readonly ratio: number
+	/** Pixels per art unit to draw at. */
+	readonly pixelsPerUnit: number
+	/** Where the logical origin lands, in canvas pixels. */
+	readonly origin: Vec2
+}
+
+/**
+ * Blit one sampled frame into a canvas, in draw order.
+ *
+ * The caller supplies the scale and origin, because "fill the viewport" and
+ * "fit inside a tile" only differ in those two numbers — the drawing rules are
+ * identical.
+ *
+ * `origin` is where the logical origin lands, and `quad` is pivot-relative, so
+ * the transform is *translate to the pivot, then draw the quad about the local
+ * origin*: the drawn rect is `origin + pivot + quad` and nothing else. Adding
+ * the origin a second time — to the quad as well as to the translate — lands a
+ * frame at twice its intended distance from the canvas corner, which is how
+ * every tile ends up showing a corner of its own pose instead of the pose.
+ */
+export const paintClipFrame = (
+	canvas: HTMLCanvasElement,
+	props: ClipFrameProps,
+): void => {
+	const context = prepareCanvas(canvas, props.ratio)
+	if (context === null) return
+	const snap = (value: number): number =>
+		Math.round(value * props.ratio) / props.ratio
+	for (const layer of layersAt(props.document, props.clip, props.timeMs)) {
+		const image = atlasImageFor(layer.sprite, props.atlasImages)
+		if (image === undefined) continue
+		const source = integerSourceRect(atlasSource(layer.sprite, props.document))
+		const quad = quadFor(
+			layer.sprite,
+			layer.position,
+			layer.scale,
+			props.pixelsPerUnit,
+		)
+		const left = snap(quad.left)
+		const top = snap(quad.top)
+		const right = snap(quad.left + quad.width)
+		const bottom = snap(quad.top + quad.height)
+		// Nearest-neighbour at 1:1, when enlarging, and whenever the scale is a
+		// single 1/n of a device pixel — those are the exact scales, where
+		// interpolating would blur a pixel that could have been dropped whole. A
+		// layer the animation genuinely scales to a non-unit fraction is
+		// smoothed, where dropping pixels would alias instead.
+		const deviceScale = ((right - left) * props.ratio) / source[2]
+		const reciprocal = 1 / deviceScale
+		const exactScale =
+			Math.abs(reciprocal - Math.round(reciprocal)) < 1e-3 ||
+			Math.abs(deviceScale - Math.round(deviceScale)) < 1e-3
+		context.imageSmoothingEnabled = deviceScale < 1 - 1e-3 && !exactScale
+		context.imageSmoothingQuality = "high"
+		context.save()
+		context.translate(
+			snap(props.origin[0] + quad.pivotX),
+			snap(props.origin[1] + quad.pivotY),
+		)
+		context.rotate(canvasRotation(layer.rotation))
+		context.drawImage(
+			image,
+			source[0],
+			source[1],
+			source[2],
+			source[3],
+			left,
+			top,
+			Math.max(1 / props.ratio, right - left),
+			Math.max(1 / props.ratio, bottom - top),
+		)
+		context.restore()
+	}
+}
+
+export type FitPaintProps = Omit<ClipFrameProps, "origin" | "pixelsPerUnit"> & {
+	/** The frame's box, measured with `clipBoundsFrames` at 1:1. */
+	readonly bounds: Box
+	/** The canvas content box the frame has to fit into. */
+	readonly dest: Vec2
+	/** Ceiling on the scale, so a tiny frame is never blown up into mush. */
+	readonly maxPixelsPerUnit: number
+	/** Fraction of the destination the frame may use. */
+	readonly paddingRatio: number
+}
+
+/** Ceilings so the inspector stage and a strip thumbnail both stay legible. */
+export const STAGE_PADDING_RATIO = 0.94
+/** 1 keeps a full-frame pose touching the tile edge, never crossing it. */
+export const TILE_PADDING_RATIO = 0.98
+
+/**
+ * Paint a frame framed inside its box: scale to fill and centre the bounds, so
+ * nothing is ever drawn outside the canvas. The scale is snapped to whole
+ * device pixels per art pixel, which is what keeps a thumbnail from blurring.
+ */
+export const paintClipFitted = (
+	canvas: HTMLCanvasElement,
+	props: FitPaintProps,
+): void => {
+	const view = fitClipView({
+		bounds: props.bounds,
+		box: props.dest,
+		maxPixelsPerUnit: props.maxPixelsPerUnit,
+		paddingRatio: props.paddingRatio,
+		ratio: props.ratio,
+		mode: "fit",
+		zoom: 1,
+	})
+	paintClipFrame(canvas, {
+		...props,
+		pixelsPerUnit: view.pixelsPerUnit,
+		origin: view.origin,
+	})
+}

@@ -8,5 +8,6 @@
 
 export * from "./atlas"
 export * from "./events"
+export * from "./preview"
 export * from "./timeline"
 export type * from "./types"

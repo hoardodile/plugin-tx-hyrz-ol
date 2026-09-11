@@ -14,7 +14,13 @@ import {
 	dueEvents,
 	eventsAtFrame,
 } from "../kernel/events"
-import { clipDuration, layersAt, spriteAt, valueAt } from "../kernel/timeline"
+import {
+	clipDuration,
+	layersAt,
+	nextClipName,
+	spriteAt,
+	valueAt,
+} from "../kernel/timeline"
 import type {
 	CharacterDocument,
 	Clip,
@@ -380,5 +386,25 @@ describe("clip classification", () => {
 			"A_1hit",
 			"SP_skill1",
 		])
+	})
+})
+
+describe("action order", () => {
+	const named = (name: string): Clip => ({ ...clip, name })
+	const list = [named("C_idle"), named("A_1hit"), named("SP_skill1")]
+
+	it("walks the list one action at a time", () => {
+		expect(nextClipName(list, "C_idle")).toBe("A_1hit")
+		expect(nextClipName(list, "A_1hit")).toBe("SP_skill1")
+	})
+
+	it("wraps from the last action back to the first", () => {
+		expect(nextClipName(list, "SP_skill1")).toBe("C_idle")
+	})
+
+	it("starts from the top for a name the list does not hold", () => {
+		expect(nextClipName(list, "")).toBe("C_idle")
+		expect(nextClipName(list, "gone")).toBe("C_idle")
+		expect(nextClipName([], "C_idle")).toBeUndefined()
 	})
 })

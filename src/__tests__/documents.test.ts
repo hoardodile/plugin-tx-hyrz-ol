@@ -17,6 +17,9 @@ import { Schema } from "effect"
 import { describe, expect, it } from "vitest"
 
 import { CharacterDocumentSchema } from "../boundary/schema"
+import { DEFAULT_PIXELS_PER_UNIT } from "../kernel/atlas"
+import { clipBoundsFrames, fitClipView } from "../kernel/preview"
+import type { CharacterDocument } from "../kernel/types"
 
 const decode = Schema.decodeUnknownSync(CharacterDocumentSchema)
 
@@ -56,6 +59,55 @@ describe.skipIf(sampleDocuments().length === 0)("exported documents", () => {
 				decode(raw)
 			} catch (error) {
 				throw new Error(`${path}: ${(error as Error).message.slice(0, 1200)}`)
+			}
+		}
+	})
+
+	/**
+	 * A real sprite's pivot can sit outside its own rect, and a layer's position
+	 * can carry a pose a long way from the character's origin. The box a tile is
+	 * sized to is the union of what every frame draws, so it has to cover the
+	 * motion — but a box that spans an atlas page would shrink the character to
+	 * nothing. Measure every clip of a spread of real characters and require
+	 * both: a box big enough to show the frame, small enough to be a frame.
+	 */
+	it("measure every clip at a size the viewer can actually show", () => {
+		const tile = [150, 120] as const
+		for (const path of sampleDocuments()) {
+			const document = decode(
+				JSON.parse(readFileSync(path, "utf8")),
+			) as unknown as CharacterDocument
+			for (const clip of document.clips) {
+				const bounds = clipBoundsFrames(document, clip)
+				if (bounds === undefined) continue
+				const fit = fitClipView({
+					bounds,
+					box: tile,
+					maxPixelsPerUnit: 400,
+					paddingRatio: 0.98,
+					ratio: 1,
+					mode: "fit",
+					zoom: 1,
+				})
+				// A measured box counts art pixels, so it is scaled by
+				// `pixelsPerUnit / DEFAULT_PIXELS_PER_UNIT` to land in canvas
+				// pixels.
+				const scale = fit.pixelsPerUnit / DEFAULT_PIXELS_PER_UNIT
+				const drawnWidth = bounds[2] * scale
+				const drawnHeight = bounds[3] * scale
+				expect(
+					Math.max(drawnWidth, drawnHeight),
+					`${path} ${clip.name}: drawn ${drawnWidth}x${drawnHeight}`,
+				).toBeGreaterThan(20)
+				expect(drawnWidth).toBeLessThanOrEqual(tile[0] + 1)
+				expect(drawnHeight).toBeLessThanOrEqual(tile[1] + 1)
+				// The union is the whole animation, so it is normally close to a
+				// single pose; only a clip that genuinely travels gets a big box,
+				// and even a cross-screen dash stays inside a page.
+				expect(
+					Math.max(bounds[2], bounds[3]),
+					`${path} ${clip.name}: box ${bounds}`,
+				).toBeLessThan(2048)
 			}
 		}
 	})

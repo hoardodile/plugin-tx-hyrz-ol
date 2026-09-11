@@ -35,6 +35,20 @@ function vars(value: string): string {
 		.join(",")
 }
 
+/** i18next plural forms: `key_zero` / `key_one` / `key_two` / `key_few` / `key_many` / `key_other`. */
+const PLURAL_SUFFIXES = [
+	"_zero",
+	"_one",
+	"_two",
+	"_few",
+	"_many",
+	"_other",
+] as const
+
+function isPluralKey(key: string): boolean {
+	return PLURAL_SUFFIXES.some((suffix) => key.endsWith(suffix))
+}
+
 describe("plugin locale parity", () => {
 	const enFlat = flatten(BUNDLES.en!)
 	const enKeys = new Set(enFlat.map((r) => r.key))
@@ -78,9 +92,35 @@ describe("plugin locale parity", () => {
 			if (lang === "en") continue
 			const untranslated: string[] = []
 			for (const { key, value } of flatten(bundle)) {
+				// A plural form the language does not distinguish (zh/ja have a
+				// single form, so i18next reads `_one` and `_other` alike) is
+				// legitimately identical to English; the host catalogs ship the
+				// same shape. Only non-plural copy must differ.
+				if (isPluralKey(key)) continue
 				if (value === english.get(key)) untranslated.push(key)
 			}
 			expect(untranslated, `untranslated keys in ${lang}`).toEqual([])
+		}
+	})
+
+	it("ships a plural form for every language that needs one", () => {
+		// i18next resolves `key_one`/`key_other` through Intl.PluralRules; a
+		// language that needs `_one` and ships only `_other` would silently
+		// render the plural in the singular case.
+		const plural = enFlat.filter((row) => isPluralKey(row.key))
+		expect(plural.length).toBeGreaterThan(0)
+		for (const [lang, bundle] of Object.entries(BUNDLES)) {
+			const keys = new Set(flatten(bundle).map((row) => row.key))
+			const required = plural.filter((row) => {
+				const one = row.key.endsWith("_one")
+				const categories = new Intl.PluralRules(lang).resolvedOptions()
+					.pluralCategories
+				return one ? categories.includes("one") : categories.includes("other")
+			})
+			const missing = required
+				.filter((row) => !keys.has(row.key))
+				.map((row) => row.key)
+			expect(missing, `missing plural forms in ${lang}`).toEqual([])
 		}
 	})
 })

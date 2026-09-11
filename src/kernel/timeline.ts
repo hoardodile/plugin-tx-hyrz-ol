@@ -51,6 +51,22 @@ export const clipByName = (
 export const defaultClip = (document: CharacterDocument): Clip | undefined =>
 	clipByName(document, "C_idle") ?? document.clips.at(0)
 
+/**
+ * The action after `name` in list order, wrapping at the end.
+ *
+ * "The next action" is a property of the list rather than of a clip, so the
+ * viewer's auto-next asks for it here: the last action is followed by the
+ * first, and a name the list does not hold (the viewer's empty selection)
+ * starts from the top.
+ */
+export const nextClipName = (
+	clips: readonly Clip[],
+	name: string,
+): string | undefined => {
+	const index = clips.findIndex((clip) => clip.name === name)
+	return clips.at(index + 1)?.name ?? clips.at(0)?.name
+}
+
 export const layerInfos = (document: CharacterDocument): readonly LayerInfo[] =>
 	document.layers
 

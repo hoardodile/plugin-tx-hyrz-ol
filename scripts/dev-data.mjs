@@ -9,6 +9,7 @@
  *   node scripts/dev-data.mjs --data <dir>                 # first character
  *   node scripts/dev-data.mjs --data <dir> <id>            # one character
  *   node scripts/dev-data.mjs --data <dir> --all           # every character
+ *   node scripts/dev-data.mjs --data <dir> --resource-dir  # hoardodile's own flag
  *   node scripts/dev-data.mjs --data <dir> --collection    # one collection
  *
  * `<dir>` may be an export root (holding `characters/`), a `characters/`
@@ -26,6 +27,8 @@ const root = join(here, "..")
 const args = process.argv.slice(2)
 const wantsAll = args.includes("--all")
 const wantsCollection = args.includes("--collection")
+/** `--resource-dir` is hoardodile's own flag: pass the directory straight on. */
+const wantsResourceDir = args.includes("--resource-dir")
 
 const dataIndex = args.indexOf("--data")
 const dataValue =
@@ -36,7 +39,7 @@ const ids = args.filter(
 )
 
 const usage = [
-	"usage: node scripts/dev-data.mjs --data <export dir> [<id>] [--all|--collection]",
+	"usage: node scripts/dev-data.mjs --data <export dir> [<id>] [--all|--resource-dir|--collection]",
 	"",
 	"The character export is not part of this repository. Pass the directory that",
 	"holds `characters/<id>/character.json` (an export root, or `characters/`",
@@ -111,8 +114,15 @@ if (wantsCollection) {
 	// enumerate all of it.
 	devArgs.push("--data", collectionDir)
 	console.log(`[dev] collection resource: ${collectionDir}`)
+} else if (wantsResourceDir) {
+	// `--resource-dir` is hoardodile's own flag: every *direct subfolder* of the
+	// characters directory becomes a resource, which is what a player that holds
+	// one character per resource wants.
+	devArgs.push("--resource-dir", charactersDir)
+	console.log(
+		`[dev] ${characterFolders.length} character resources in ${charactersDir}`,
+	)
 } else if (wantsAll) {
-	// Each *direct subfolder* of the characters directory becomes a resource.
 	devArgs.push("--resource-dir", charactersDir)
 	console.log(
 		`[dev] ${characterFolders.length} character resources in ${charactersDir}`,
