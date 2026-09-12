@@ -47,7 +47,9 @@ no forma parte de este repositorio.
   con la ganancia exportada restaurada (las que no son 1.0 muestran una insignia
   `x0.80`), reproducibles cuando resuelven a una muestra, con el estado completo de
   resolución (los no resueltos se muestran, no se ocultan).
-- Tarjeta: `cover.png` como carátula y textos de esquina localizados vía claves i18n.
+- Tarjeta: `cover.png` como carátula; la insignia inferior izquierda combina el icono
+  de acción con el número de acciones y el de sonido con el de eventos de sonido (en una
+  colección, el número de personajes), y la inferior derecha el tamaño nativo en píxeles.
 
 ## Requisitos
 

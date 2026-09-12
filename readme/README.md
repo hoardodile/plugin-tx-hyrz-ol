@@ -43,7 +43,9 @@ separate, private producer, not part of this repository.
   gain restored (gains above 1.0 show an `x0.80` badge), playable when they resolve
   to a sample, plus the full event→sample status (unresolved ones are shown rather
   than hidden).
-- Card: `cover.png` as the cover, localized corner copy via manifest i18n keys.
+- Card: `cover.png` as the cover; the bottom-left badge pairs an action icon with the
+  clip count and a sound icon with the sound-event count (a collection shows its
+  character count instead), the bottom-right badge the cover's native pixel size.
 - Permissions: `sourceMeta` only.
 
 ## Requirements

@@ -45,7 +45,9 @@ dieses Repositorys.
   wiederhergestelltem Pegel (Werte ungleich 1.0 zeigen ein `x0.80`-Badge), abspielbar
   sobald sie auf ein Sample zeigen, inklusive vollständigem Auflösungsstatus
   (unaufgelöste werden angezeigt, nicht versteckt).
-- Karte: `cover.png` als Cover, lokalisierte Ecktexte über Manifest-i18n-Keys.
+- Karte: `cover.png` als Cover; das Badge unten links kombiniert das Aktions-Icon mit
+  der Aktionsanzahl und das Sound-Icon mit der Anzahl der Sound-Events (bei einer Sammlung
+  stattdessen die Charakteranzahl), unten rechts steht die native Pixelgröße des Covers.
 
 ## Voraussetzungen
 

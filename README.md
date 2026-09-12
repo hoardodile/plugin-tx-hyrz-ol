@@ -187,8 +187,12 @@ FRAME_DATA_ROOT=<导出根目录> pnpm test    # 额外解码一批真实 charac
   「含 `catalog.json` 的合集根」）、`sourceMeta`（角色摘要 / 合集规模）、
   `coverLocal`（`cover.png`）、`listFiles`（`document|atlas|audio|other`）
 - `src/shared.ts`：`FrameSchema` 同时约束服务端与客户端
-- `manifest.json`：`ui.card` 的封面模板（`ui.card.{image,default}`，模板里只用
-  `t('...')` 并已声明 i18n key）
+- `manifest.json`：`ui.card.{image,default}` 的两个角标模板——左下 `bl` 是
+  `icon('play-circle')` + 动作数、`icon('music-notes')` + 音效事件数（合集根换成
+  `icon('clapperboard')` + 角色数），右下 `br` 是封面（图集首帧）的原像素 `WxH`。
+  模板只读 `source` / `coverMeta`，只用 `icon`/`number`/`gt`/`if`/`join`，不声明 i18n key。
+  注意 `join('sep', …)` 在有内联图标时会把 `sep` 插进每个子项之间（`join` 对非空
+  分隔符返回交错数组），所以角标用 `join(' ', …)` 让角标自身的 `gap-1` 负责间距
 - 退出 watch 后重新构建：`pnpm build`；发布：`pnpm release <version>`
 
 ## 9. 说明
