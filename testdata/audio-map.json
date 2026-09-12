@@ -3,5 +3,15 @@
 		"event": "event:/sfx/demo/hit_01",
 		"file": null,
 		"match": "unresolved"
+	},
+	{
+		"event": "event:/sfx/demo/voice_a",
+		"file": null,
+		"match": "unresolved"
+	},
+	{
+		"event": "event:/sfx/demo/voice_b",
+		"file": null,
+		"match": "unresolved"
 	}
 ]

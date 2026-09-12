@@ -49,6 +49,9 @@ export default {
 	"audio.noMap": "暂无事件映射",
 	"audio.noMapHint":
 		"该角色的事件未匹配到样本。可在 overrides.json 中手工配对后重新导出。",
+	"voices.title": "角色语音",
+	"voices.resolved": "已解析 {{resolved}}/{{total}} 条语音",
+	"voices.slot": "槽位 {{slot}}",
 	"error.load": "无法加载该角色",
 	"error.noActions": "这个导出里没有动作",
 	"error.noActionsHint":

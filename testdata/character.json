@@ -128,6 +128,18 @@
 			]
 		}
 	],
+	"voices": [
+		{
+			"name": "voice_a",
+			"slot": 0,
+			"event": "event:/sfx/demo/voice_a"
+		},
+		{
+			"name": "voice_b",
+			"slot": 3,
+			"event": "event:/sfx/demo/voice_b"
+		}
+	],
 	"layers": [
 		{
 			"name": "layer0",
@@ -143,14 +155,14 @@
 		}
 	],
 	"audio": {
-		"events": 1,
+		"events": 3,
 		"resolved": 0,
-		"unresolved": 1
+		"unresolved": 3
 	},
 	"stats": {
 		"sprites": 4,
 		"clips": 3,
-		"soundEvents": 1,
+		"soundEvents": 2,
 		"maxClipMs": 133.33
 	}
 }

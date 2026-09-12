@@ -50,6 +50,9 @@ export default {
 	"audio.noMap": "Sin mapa de eventos",
 	"audio.noMapHint":
 		"Los eventos no se resolvieron a muestras. Empareja en overrides.json y vuelve a exportar.",
+	"voices.title": "Voces del personaje",
+	"voices.resolved": "{{resolved}}/{{total}} voces resueltas",
+	"voices.slot": "ranura {{slot}}",
 	"error.load": "No se pudo cargar el personaje",
 	"error.noActions": "No hay animaciones en esta exportación",
 	"error.noActionsHint":

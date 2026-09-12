@@ -49,6 +49,9 @@ export default {
 	"audio.noMap": "No event map",
 	"audio.noMapHint":
 		"This character's events were not resolved to samples. Pair them in overrides.json and re-export.",
+	"voices.title": "Character voices",
+	"voices.resolved": "{{resolved}}/{{total}} voices resolved",
+	"voices.slot": "slot {{slot}}",
 	"error.load": "Could not load this character",
 	"error.noActions": "No animations in this export",
 	"error.noActionsHint":

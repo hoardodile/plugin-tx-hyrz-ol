@@ -50,6 +50,9 @@ export default {
 	"audio.noMap": "Keine Zuordnung",
 	"audio.noMapHint":
 		"Die Events wurden keinem Sample zugeordnet. In overrides.json paaren und neu exportieren.",
+	"voices.title": "Charakter-Stimmen",
+	"voices.resolved": "{{resolved}}/{{total}} Stimmen aufgelöst",
+	"voices.slot": "Slot {{slot}}",
 	"error.load": "Charakter konnte nicht geladen werden",
 	"error.noActions": "Keine Animationen in diesem Export",
 	"error.noActionsHint":

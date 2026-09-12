@@ -53,6 +53,7 @@
   "sprites": [ /* 见 2.1 */ ],
   "clips": [ /* 见 2.2 */ ],
   "sounds": [ /* 见 2.3 */ ],
+  "voices": [ /* 见 2.4，可选 */ ],
   "points": [{ "name": "layer0", "position": [0, 0, 0] }],
   "layers": [
     { "name": "layer0", "sortingOrder": 0, "sortingLayer": 0, "z": 0 }
@@ -69,7 +70,7 @@
 - `atlases[].file` 是**图集页文件相对本目录的路径**（`atlas/page0.png`）。
 - `points[].position` 是图层锚点在世界空间的位置；`layers[].z` 是它的 z。
   绘制顺序由 `layers[].sortingOrder` / `sortingLayer` 决定。
-- `audio.events` 必须等于 `sounds` 里出现的**去重事件路径数**，
+- `audio.events` 必须等于 `sounds` 与 `voices` 里出现的**去重事件路径数**，
   且 `events == resolved + unresolved`。
 - `stats` 是冗余摘要，供 `sourceMeta` 不读整份文档就能显示。
 
@@ -145,6 +146,22 @@
 - `volumes` 与 `events` **下标对齐**；导出端在整帧音量都为 1.0 时省略整个字段。
 - 消费者无增益级时按 `min(1, max(0, volume))` 钳制，但必须**保留**原始值用于显示。
 
+### 2.4 `voices[]`（可选）
+
+```jsonc
+[
+  { "name": "voice_a", "slot": 0, "event": "event:/sfx/demo/voice_a" },
+  { "name": "voice_b", "slot": 1, "event": "event:/sfx/demo/voice_b" }
+]
+```
+
+- **角色级的音效事件**，和 `sounds[]` 的区别是**没有帧号**：源数据只说"这个角色拥有这些
+  事件"，没有说哪个动作的第几帧播它。所以消费端把它们当**试听列表**呈现，
+  **不得**把它们排进任何 clip 的时间轴。
+- `slot` 是源数据里该事件的槽位序号，仅用于显示顺序，不参与播放逻辑。
+- 缺省（老导出、或源数据没有语音的角色）即没有这个键；消费者按"没有语音"处理。
+- 事件解析仍走 `audio-map.json`：`event` 到 `file` 的映射与 `sounds[]` 共用同一张表。
+
 ## 3. `audio-map.json`
 
 ```jsonc
@@ -154,7 +171,8 @@
 ]
 ```
 
-- 与 `character.json` 的 `sounds[].frames[].events` **集合相等**（不要求顺序）。
+- 与 `character.json` 的 `sounds[].frames[].events` **以及 `voices[].event`** 的并集
+  **集合相等**（不要求顺序）。
 - `file` 为 `null` 表示该事件没有解析到样本，`match` 恒为 `unresolved`；
   否则 `file` 指向本目录内一个**存在且非空**的文件。
 - `match` 是命中来源的标签（`metadata` / `name` / `override`），消费者只显示不解释。

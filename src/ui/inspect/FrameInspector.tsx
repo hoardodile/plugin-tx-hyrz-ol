@@ -36,7 +36,7 @@ import {
 	frameLayers,
 	spriteByName,
 } from "../../kernel"
-import type { CharacterDocument, Clip } from "../../kernel/types"
+import type { CharacterDocument, Clip, VoiceEvent } from "../../kernel/types"
 
 export type FrameInspectorProps = {
 	readonly document: CharacterDocument
@@ -74,6 +74,7 @@ export function FrameInspector(props: FrameInspectorProps) {
 	const { t } = useTranslation()
 	const { document, clip, timeMs, audioMap, audioEnabled, onPlayFile } = props
 	const [eventMapOpen, setEventMapOpen] = useState(false)
+	const [voicesOpen, setVoicesOpen] = useState(false)
 	const frame = frameIndex(timeMs, clip.sampleRate, clipFrameTotal(clip))
 	const drawn = frameLayers(document, clip, timeMs)
 	const due = eventsAtFrame(
@@ -81,6 +82,7 @@ export function FrameInspector(props: FrameInspectorProps) {
 		frame,
 	)
 	const resolved = audioMap.filter((entry) => entry.file !== null)
+	const voices = document.voices ?? []
 	const fileFor = (event: string): string | null =>
 		audioMap.find((entry) => entry.event === event)?.file ?? null
 	const sprites = clipSpriteNames(clip)
@@ -258,10 +260,35 @@ export function FrameInspector(props: FrameInspectorProps) {
 						</span>
 						<Badge variant="outline">{audioMap.length}</Badge>
 					</Button>
+					{/*
+					 * The character's own sound events carry no frame, so they are a
+					 * list to audition rather than something the playhead fires.
+					 */}
+					{voices.length === 0 ? null : (
+						<Button
+							size="sm"
+							variant="secondary"
+							className="w-full justify-between"
+							onClick={() => setVoicesOpen(true)}
+						>
+							<span className="flex min-w-0 items-center gap-2">
+								<Icon icon={Play} size="sm" />
+								<span className="truncate">{t("voices.title")}</span>
+							</span>
+							<Badge variant="outline">{voices.length}</Badge>
+						</Button>
+					)}
 					<EventMapDialog
 						open={eventMapOpen}
 						onOpenChange={setEventMapOpen}
 						audioMap={audioMap}
+						onPlayFile={onPlayFile}
+					/>
+					<VoiceListDialog
+						open={voicesOpen}
+						onOpenChange={setVoicesOpen}
+						voices={voices}
+						fileFor={fileFor}
 						onPlayFile={onPlayFile}
 					/>
 				</div>
@@ -363,6 +390,90 @@ function EventMapDialog({
 					</div>
 				</div>
 			)}
+		</AppDialog>
+	)
+}
+
+type VoiceListDialogProps = {
+	readonly open: boolean
+	readonly onOpenChange: (open: boolean) => void
+	readonly voices: readonly VoiceEvent[]
+	readonly fileFor: (event: string) => string | null
+	readonly onPlayFile: (file: string, volume: number) => void
+}
+
+/**
+ * The character's own sound events, which no clip schedules.
+ *
+ * They come from the export as a character-level list: the source says *which*
+ * events belong to the character, not which frame of which action plays them, so
+ * the panel plays them on demand and never pretends they are frame cues. `slot`
+ * is the index in that source list and is shown because it is the only ordering
+ * the source has.
+ */
+function VoiceListDialog({
+	open,
+	onOpenChange,
+	voices,
+	fileFor,
+	onPlayFile,
+}: VoiceListDialogProps) {
+	const { t } = useTranslation()
+	const resolved = voices.filter((voice) => fileFor(voice.event) !== null)
+
+	return (
+		<AppDialog
+			open={open}
+			onOpenChange={onOpenChange}
+			size="md"
+			title={t("voices.title")}
+			description={t("voices.resolved", {
+				resolved: resolved.length,
+				total: voices.length,
+			})}
+			contentTestId="voice-list-dialog"
+			footer={
+				<Button
+					size="sm"
+					variant="secondary"
+					onClick={() => onOpenChange(false)}
+				>
+					{t("common.close")}
+				</Button>
+			}
+		>
+			<div className="flex max-h-80 flex-col gap-0.5 overflow-y-auto">
+				{voices.map((voice) => {
+					const file = fileFor(voice.event)
+					return (
+						<div
+							key={`${voice.slot}-${voice.event}`}
+							className="flex h-chip items-center gap-2"
+						>
+							<span
+								className="min-w-0 flex-1 truncate text-xs"
+								title={voice.event}
+							>
+								{voice.name}
+							</span>
+							<Badge variant="outline">
+								{t("voices.slot", { slot: voice.slot })}
+							</Badge>
+							<Button
+								size="icon-xs"
+								variant="ghost"
+								disabled={file === null}
+								aria-label={voice.event}
+								onClick={() =>
+									file === null ? undefined : onPlayFile(file, 1)
+								}
+							>
+								<Icon icon={Play} size="sm" />
+							</Button>
+						</div>
+					)
+				})}
+			</div>
 		</AppDialog>
 	)
 }

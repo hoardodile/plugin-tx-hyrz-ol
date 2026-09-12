@@ -49,6 +49,9 @@ export default {
 	"audio.noMap": "対応表がありません",
 	"audio.noMapHint":
 		"イベントをサンプルに解決できませんでした。overrides.json で対応付けて再エクスポートしてください。",
+	"voices.title": "キャラクターのボイス",
+	"voices.resolved": "ボイス {{resolved}}/{{total}} 件を解決",
+	"voices.slot": "スロット {{slot}}",
 	"error.load": "キャラクターを読み込めません",
 	"error.noActions": "この書き出しにアクションがありません",
 	"error.noActionsHint":

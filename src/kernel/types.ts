@@ -106,6 +106,18 @@ export type SoundEvent = {
 	readonly frames: readonly SoundFrame[]
 }
 
+/**
+ * One of the character's own sound events. Unlike `sounds`, a voice carries no
+ * frame: the source data lists them per character (its voice slots), so the
+ * viewer offers them as a list to audition rather than scheduling them on a clip.
+ */
+export type VoiceEvent = {
+	readonly name: string
+	/** Index in the character's own slot list; display only. */
+	readonly slot: number
+	readonly event: string
+}
+
 export type LayerInfo = {
 	readonly name: string
 	readonly sortingOrder: number
@@ -150,6 +162,8 @@ export type CharacterDocument = {
 	readonly sprites: readonly SpriteRecord[]
 	readonly clips: readonly Clip[]
 	readonly sounds: readonly SoundEvent[]
+	/** The character's own sound events; absent on documents exported without them. */
+	readonly voices?: readonly VoiceEvent[]
 	readonly layers: readonly LayerInfo[]
 	readonly audio: AudioSummary
 	readonly stats: CharacterStats

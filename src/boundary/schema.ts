@@ -98,6 +98,16 @@ const LayerInfo = Schema.Struct({
 	z: Schema.Number,
 })
 
+/**
+ * A character-level sound event. Optional because documents exported before the
+ * field existed, and characters the source lists no voices for, both omit it.
+ */
+const VoiceEvent = Schema.Struct({
+	name: Schema.String,
+	slot: Schema.Number,
+	event: Schema.String,
+})
+
 const AtlasInfo = Schema.Struct({
 	file: Schema.String,
 	width: Schema.Number,
@@ -124,6 +134,7 @@ export const CharacterDocumentSchema = Schema.Struct({
 	sprites: Schema.Array(SpriteRecord),
 	clips: Schema.Array(Clip),
 	sounds: Schema.Array(SoundEvent),
+	voices: Schema.optional(Schema.Array(VoiceEvent)),
 	layers: Schema.Array(LayerInfo),
 	audio: Schema.Struct({
 		events: Schema.Number,

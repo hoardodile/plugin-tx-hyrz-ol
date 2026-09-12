@@ -112,3 +112,50 @@ describe.skipIf(sampleDocuments().length === 0)("exported documents", () => {
 		}
 	})
 })
+
+/**
+ * `voices` is optional in both directions: a document exported before the field
+ * existed must still decode, and one that carries it must keep it (`decode` strips
+ * what the schema does not declare, so a missing field is a silent data loss).
+ */
+describe("character voices", () => {
+	const document = {
+		schemaVersion: 1,
+		id: "test0001",
+		name: null,
+		sourceGroup: "characters",
+		sourceBundle: "bundles/demo/test0001",
+		atlases: [],
+		sprites: [],
+		clips: [],
+		sounds: [],
+		layers: [],
+		audio: { events: 2, resolved: 0, unresolved: 2 },
+		stats: { sprites: 0, clips: 0, soundEvents: 2, maxClipMs: 0 },
+	}
+
+	it("keeps the voices a document carries", () => {
+		const decoded = decode({
+			...document,
+			voices: [
+				{ name: "voice_a", slot: 0, event: "event:/sfx/demo/voice_a" },
+				{ name: "voice_b", slot: 3, event: "event:/sfx/demo/voice_b" },
+			],
+		}) as unknown as CharacterDocument
+		expect(decoded.voices).toEqual([
+			{ name: "voice_a", slot: 0, event: "event:/sfx/demo/voice_a" },
+			{ name: "voice_b", slot: 3, event: "event:/sfx/demo/voice_b" },
+		])
+	})
+
+	it("decodes a document written before voices existed", () => {
+		const decoded = decode(document) as unknown as CharacterDocument
+		expect(decoded.voices).toBeUndefined()
+	})
+
+	it("rejects a voice without an event", () => {
+		expect(() =>
+			decode({ ...document, voices: [{ name: "a", slot: 0 }] }),
+		).toThrow()
+	})
+})
